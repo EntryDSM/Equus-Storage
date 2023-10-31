@@ -14,5 +14,8 @@ class StorageController(
     private val fileUploadService: FileUploadService
 ) {
     @PostMapping("/upload")
-    fun uploadImage(@RequestPart("image") file: MultipartFile, @RequestParam("path") path: String) = fileUploadService.upload(file, path)
+    fun uploadImage(@RequestPart("image") file: MultipartFile, @RequestParam("path") path: String) = fileUploadService.upload(
+        file,
+        path
+    )
 }
