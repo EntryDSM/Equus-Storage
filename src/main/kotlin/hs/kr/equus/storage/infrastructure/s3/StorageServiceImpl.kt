@@ -45,9 +45,11 @@ class StorageServiceImpl(
 
         val inputStream = ByteArrayInputStream(os.toByteArray())
         val metadata = ObjectMetadata()
-        metadata.contentType = MediaType.IMAGE_PNG_VALUE
-        metadata.contentLength = os.size().toLong()
-        metadata.contentDisposition = "inline"
+        metadata.run {
+            contentType = MediaType.IMAGE_PNG_VALUE
+            contentLength = os.size().toLong()
+            contentDisposition = "inline"
+        }
         val fileKey = path + filename
         s3Client.putObject(
             PutObjectRequest(bucketName, path + filename, inputStream, metadata)
