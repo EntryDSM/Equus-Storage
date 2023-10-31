@@ -37,6 +37,12 @@ dependencies {
 
     // Cloud
     implementation(Dependencies.CLOUD_CONFIG)
+
+    // Amazon SDK
+    implementation(Dependencies.AMAZON_SDK)
+
+    // Scalr
+    implementation(Dependencies.SCALR)
 }
 
 tasks.withType<KotlinCompile> {
