@@ -39,10 +39,10 @@ dependencies {
     implementation(Dependencies.CLOUD_CONFIG)
 
     // Amazon SDK
-    implementation("org.springframework.cloud:spring-cloud-starter-aws:2.0.1.RELEASE")
+    implementation(Dependencies.AMAZON_SDK)
 
     // Scalr
-    implementation("org.imgscalr:imgscalr-lib:4.2")
+    implementation(Dependencies.SCALR)
 }
 
 tasks.withType<KotlinCompile> {

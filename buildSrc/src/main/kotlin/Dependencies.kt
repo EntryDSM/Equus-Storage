@@ -22,5 +22,8 @@ object Dependencies {
     const val SPRING_CLOUD = "org.springframework.cloud:spring-cloud-dependencies:${DependencyVersions.SPRING_CLOUD_VERSION}"
 
     // amazon
-    const val AMAZON_SDK = "aws.sdk.kotlin:s3:${DependencyVersions.AMAZON_SDK_VERSION}"
+    const val AMAZON_SDK = "org.springframework.cloud:spring-cloud-starter-aws:${DependencyVersions.AMAZON_SDK_VERSION}"
+
+    // Scalr
+    const val SCALR = "org.imgscalr:imgscalr-lib:${DependencyVersions.SCALR_VERSION}"
 }
