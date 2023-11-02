@@ -35,9 +35,6 @@ class StorageServiceImpl(
     @Value("\${aws.s3.bucket}")
     lateinit var bucketName: String
 
-    @Value("\${aws.s3.base-image-url}")
-    lateinit var baseImageUrl: String
-
     override fun upload(file: MultipartFile, path: String): String {
         val ext = verificationFile(file)
 
@@ -82,14 +79,13 @@ class StorageServiceImpl(
         }
     }
 
-    override fun generateObjectUrl(objectName: String?, path: String): String {
-        if (objectName == null) throw IllegalArgumentException("objectName이 null입니다.")
+    override fun generateObjectUrl(objectName: String, path: String): String {
         val expiration = Date()
         expiration.time = expiration.time + EXP_TIME
 
         return s3Client.generatePresignedUrl(
             GeneratePresignedUrlRequest(
-                baseImageUrl,
+                bucketName,
                 "${path}$objectName"
             ).withMethod(HttpMethod.GET).withExpiration(expiration)
         ).toString()
