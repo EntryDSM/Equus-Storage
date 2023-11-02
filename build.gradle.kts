@@ -43,6 +43,9 @@ dependencies {
 
     // Scalr
     implementation(Dependencies.SCALR)
+
+    // Validation
+    implementation(Dependencies.SPRING_VALIDATION)
 }
 
 tasks.withType<KotlinCompile> {
