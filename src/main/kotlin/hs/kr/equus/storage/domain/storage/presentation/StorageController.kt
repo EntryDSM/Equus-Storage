@@ -1,6 +1,7 @@
 package hs.kr.equus.storage.domain.storage.presentation
 
 import hs.kr.equus.storage.domain.storage.presentation.dto.request.DeleteObjectRequest
+import hs.kr.equus.storage.domain.storage.presentation.dto.request.GenerateObjectUrlRequest
 import hs.kr.equus.storage.domain.storage.presentation.dto.request.GetObjectRequest
 import hs.kr.equus.storage.domain.storage.service.DeleteObjectService
 import hs.kr.equus.storage.domain.storage.service.FileUploadService
@@ -42,9 +43,15 @@ class StorageController(
 
     @GetMapping
     fun getObject(@RequestBody getObjectRequest: GetObjectRequest) =
-        getObjectService.getObject(path = getObjectRequest.path, objectName = getObjectRequest.objectName)
+        getObjectService.getObject(
+            path = getObjectRequest.path,
+            objectName = getObjectRequest.objectName
+        )
 
     @GetMapping("/url")
-    fun generateObjectUrl(objectName: String) =
-        generateObjectUrlService.generateObjectUrl(objectName)
+    fun generateObjectUrl(@RequestBody generateObjectUrlRequest: GenerateObjectUrlRequest) =
+        generateObjectUrlService.generateObjectUrl(
+            objectName = generateObjectUrlRequest.objectName,
+            path = generateObjectUrlRequest.path
+        )
 }

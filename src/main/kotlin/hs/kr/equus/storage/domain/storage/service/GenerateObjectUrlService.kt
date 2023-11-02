@@ -1,5 +1,5 @@
 package hs.kr.equus.storage.domain.storage.service
 
 interface GenerateObjectUrlService {
-    fun generateObjectUrl(objectName: String?): String
+    fun generateObjectUrl(objectName: String?, path: String): String
 }

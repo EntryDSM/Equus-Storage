@@ -82,7 +82,7 @@ class StorageServiceImpl(
         }
     }
 
-    override fun generateObjectUrl(objectName: String?): String {
+    override fun generateObjectUrl(objectName: String?, path: String): String {
         if (objectName == null) throw IllegalArgumentException("objectName이 null입니다.")
         val expiration = Date()
         expiration.time = expiration.time + EXP_TIME
@@ -90,7 +90,7 @@ class StorageServiceImpl(
         return s3Client.generatePresignedUrl(
             GeneratePresignedUrlRequest(
                 baseImageUrl,
-                objectName
+                "${path}$objectName"
             ).withMethod(HttpMethod.GET).withExpiration(expiration)
         ).toString()
     }
