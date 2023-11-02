@@ -1,10 +1,16 @@
 package hs.kr.equus.storage.infrastructure.s3
 
+import com.amazonaws.HttpMethod
 import com.amazonaws.services.s3.AmazonS3Client
 import com.amazonaws.services.s3.model.CannedAccessControlList
+import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest
 import com.amazonaws.services.s3.model.ObjectMetadata
 import com.amazonaws.services.s3.model.PutObjectRequest
+import com.amazonaws.util.IOUtils
+import hs.kr.equus.storage.domain.storage.service.DeleteObjectService
 import hs.kr.equus.storage.domain.storage.service.FileUploadService
+import hs.kr.equus.storage.domain.storage.service.GenerateObjectUrlService
+import hs.kr.equus.storage.domain.storage.service.GetObjectService
 import org.imgscalr.Scalr
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.MediaType
@@ -20,7 +26,7 @@ import javax.imageio.ImageIO
 @Service
 class StorageServiceImpl(
     private val s3Client: AmazonS3Client
-) : FileUploadService {
+) : FileUploadService, DeleteObjectService, GetObjectService, GenerateObjectUrlService {
 
     companion object {
         const val EXP_TIME = 1000 * 60 * 2
@@ -52,10 +58,37 @@ class StorageServiceImpl(
         }
         val fileKey = path + filename
         s3Client.putObject(
-            PutObjectRequest(bucketName, path + filename, inputStream, metadata)
+            PutObjectRequest(bucketName, fileKey, inputStream, metadata)
                 .withCannedAcl(CannedAccessControlList.AuthenticatedRead)
         )
         return filename
+    }
+
+    override fun delete(path: String, objectName: String) {
+        s3Client.deleteObject(bucketName, "${path}$objectName")
+    }
+
+    override fun getObject(path: String, objectName: String): ByteArray {
+        try {
+            val s3Object = s3Client.getObject(bucketName, "${path}$objectName")
+            return IOUtils.toByteArray(s3Object.objectContent)
+        } catch (e: RuntimeException) {
+            throw IllegalArgumentException("이미지를 찾을 수 없습니다.")
+        } catch (e: IOException) {
+            throw IllegalArgumentException("이미지를 찾을 수 없습니다.")
+        }
+    }
+
+    override fun generateObjectUrl(objectName: String, path: String): String {
+        val expiration = Date()
+        expiration.time = expiration.time + EXP_TIME
+
+        return s3Client.generatePresignedUrl(
+            GeneratePresignedUrlRequest(
+                bucketName,
+                "${path}$objectName"
+            ).withMethod(HttpMethod.GET).withExpiration(expiration)
+        ).toString()
     }
 
     private fun verificationFile(file: MultipartFile?): String {
